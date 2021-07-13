@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="&amp;emsp;&amp;emsp;对于 Java 程序员来说，JVM 是一道不可不迈过去的坎。JVM 存在的意义是什么？Java 代码是如何运行的？如何通过指标查看当前服务状态？服务出错了怎么定位？怎么配置参数使得服务性能最优？本文带你了解 JVM 的所有知识点，保证让你彻底搞懂 JVM。 JVM（Java Virtual Machine）既然计算机只能识别0，1，那么一个 Java 文件是如何被加载内存里">
+<meta property="og:type" content="article">
+<meta property="og:title" content="彻底搞定JVM">
+<meta property="og:url" content="http://yoursite.com/2017/06/27/2017-06-27-%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82JVM/index.html">
+<meta property="og:site_name" content="ZL&#39;BLOG">
+<meta property="og:description" content="&amp;emsp;&amp;emsp;对于 Java 程序员来说，JVM 是一道不可不迈过去的坎。JVM 存在的意义是什么？Java 代码是如何运行的？如何通过指标查看当前服务状态？服务出错了怎么定位？怎么配置参数使得服务性能最优？本文带你了解 JVM 的所有知识点，保证让你彻底搞懂 JVM。 JVM（Java Virtual Machine）既然计算机只能识别0，1，那么一个 Java 文件是如何被加载内存里">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://user-images.githubusercontent.com/23112609/84356565-eb86b580-abf6-11ea-8926-14cf89795c6e.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/23112609/84366167-0bbd7100-ac05-11ea-8715-25251ffb2f24.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/23112609/84907810-39fbee80-b0e6-11ea-86c1-f9d78791ae24.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/23112609/84386710-5ef2ec00-ac24-11ea-915c-fed8fa04bad6.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/23112609/84386789-847ff580-ac24-11ea-84f9-edac15ed56f9.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/23112609/84386880-b002e000-ac24-11ea-8870-c519f5872f06.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/23112609/84386962-d4f75300-ac24-11ea-99ee-f59c4a983ff3.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/23112609/84387101-0e2fc300-ac25-11ea-85c4-989f36651633.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/23112609/84387233-433c1580-ac25-11ea-9fee-8c6596bb5aee.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/23112609/84388015-759a4280-ac26-11ea-8dff-d566d8296227.png">
+<meta property="article:published_time" content="2017-06-27T06:09:21.000Z">
+<meta property="article:modified_time" content="2021-07-13T02:28:31.387Z">
+<meta property="article:author" content="Zhule">
+<meta property="article:tag" content="JVM">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/23112609/84356565-eb86b580-abf6-11ea-8926-14cf89795c6e.png">
+
+<link rel="canonical" href="http://yoursite.com/2017/06/27/2017-06-27-%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82JVM/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>彻底搞定JVM | ZL'BLOG</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R1HQLXN188"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-R1HQLXN188');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ZL'BLOG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">23</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/27/2017-06-27-%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82JVM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="Zhule">
+      <meta itemprop="description" content="Java|Python|Flink|数据库 <br> 知其然，知其所以然。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZL'BLOG">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          彻底搞定JVM
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-06-27 14:09:21" itemprop="dateCreated datePublished" datetime="2017-06-27T14:09:21+08:00">2017-06-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>8.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>&emsp;&emsp;对于 Java 程序员来说，JVM 是一道不可不迈过去的坎。<strong>JVM 存在的意义是什么？Java 代码是如何运行的？如何通过指标查看当前服务状态？服务出错了怎么定位？怎么配置参数使得服务性能最优？</strong>本文带你了解 JVM 的所有知识点，保证让你彻底搞懂 JVM。</p>
+<h3 id="JVM（Java-Virtual-Machine）"><a href="#JVM（Java-Virtual-Machine）" class="headerlink" title="JVM（Java Virtual Machine）"></a>JVM（Java Virtual Machine）</h3><p>既然计算机只能识别0，1，那么一个 Java 文件是如何被加载内存里并执行对应的逻辑的？</p>
+<ul>
+<li>将合法的 .java 文件编译为 class（字节码）文件</li>
+<li>将 class 文件加载到内存中运行</li>
+</ul>
+<p>是谁再做这些事情呢？就是 JVM，可是 JVM 只是一个规范（Java 虚拟机规范），他只是规定了这些事情应该怎么做，而具体实现虚拟机规范的厂家有很多，目前比较主流的就是 Oracle 官方提供的 HotSpot 虚拟机。</p>
+<a id="more"></a>
+
+<h4 id="编译为-class-文件"><a href="#编译为-class-文件" class="headerlink" title="编译为 class 文件"></a>编译为 class 文件</h4><ul>
+<li>javac Hello.java</li>
+<li>词法，语法分析</li>
+<li>语义分析，字节码生成</li>
+</ul>
+<h4 id="加载class文件"><a href="#加载class文件" class="headerlink" title="加载class文件"></a>加载class文件</h4><p>虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。<br>类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载、验证、准备、解析、初始化、使用、卸载 7 个阶段。这 7 个阶段中，加载、验证、准备、初始化和卸载这几个的顺序是确定，而解析阶段则不一定：它在某些情况下可以再初始化阶段之后再开始，称为动态绑定/运行时绑定。</p>
+<h5 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h5><p>虚拟机规范把<code>通过一个类的全限定名来获取描述此类的二进制字节流</code>这个动作放到了外部去实现（虚拟机的外部，java代码中），让应用程序自己决定如何获取所需要的类。实现这个动作的代码模块称为<code>类加载器</code>。<br>对于任意一个类，都需要由加载它的类加载器和这个类本身一同确立其在 Java 虚拟机中的唯一性。类加载器除了能用来加载类，还能用来作为类的层次划分。Java 自身提供了 3 种类加载器：</p>
+<ol>
+<li>启动类加载器(Bootstrap ClassLoader),它是属于虚拟机自身的一部分，用 C++ 实现的，主要负责加载<code>lib</code>目录中或被<code>-Xbootclasspath</code>指定的路径中的并且文件名是被虚拟机识别的文件。它等于是所有类加载器的父类；</li>
+<li>扩展类加载器(Extension ClassLoader),它是 Java 实现的，独立于虚拟机，主要负责加 载<code>\lib\ext</code>目录中或被 java.ext.dirs 系统变量所指定的路径的类库；</li>
+<li>应用程序类加载器(Application ClassLoader),它是 Java 实现的，独立于虚拟机。主要负责加载用户类路径(classPath)上的类库，如果我们没有实现自定义的类加载器那它就是我们程序中的默认加载器；</li>
+</ol>
+<p>双亲委派模型:<br><img src="https://user-images.githubusercontent.com/23112609/84356565-eb86b580-abf6-11ea-8926-14cf89795c6e.png" style="zoom:70%" ></img><br>如果一个类加载器收到了类加载的请求，它首先不会自己去尝试加载这个类，而是把所有的请求委派给父类加载器去完成，每一层次的加载器都是如此；<br>只有当父类加载器反馈自己无法完成加载请求时，子类加载器才会尝试自己加载。<br>好处就是类也具有了优先级关系，rt.jar 中的类只能被启动类加载器加载，省去了重复加载以及安全性保证。<br>但是，如果基础类又要回调用户的代码应该怎么办？典型的例子就是rt.jar中的Connection 需要指向不同的数据库加载jar的connection具体实现类，这时候就需要破坏双亲委派：</p>
+<ol>
+<li>自定义 classLoader，重写loadClass()，findClass()方法，使其不遵守双亲委派；</li>
+<li>使用 thread.setContextLoader()，设置当前线程的类加载器，使得父类直接请求子类加载器去加载类；</li>
+<li>OSGI：不再是双亲委派的树状结构，而是网状结构，维护一个类加载器列表，找到合适的类加载器加载，每一个程序模块（Bundle）都有一个自己的类加载器；当需要更换一个Bundle时，就把Bundle连通类加载器一起换掉以实现代码的热替换；</li>
+</ol>
+<h4 id="执行class文件"><a href="#执行class文件" class="headerlink" title="执行class文件"></a>执行class文件</h4><ul>
+<li>栈针</li>
+<li>局部变量表</li>
+<li>操作数栈</li>
+<li>动态链接</li>
+<li>方法返回地址</li>
+</ul>
+<h3 id="内存分配与垃圾回收"><a href="#内存分配与垃圾回收" class="headerlink" title="内存分配与垃圾回收"></a>内存分配与垃圾回收</h3><p>我们的 java 程序以进程的形式在 Linux 上运行，那么 Linux 怎么分配给 java 进程内存的？<br>java 进程又是怎么使用 Linux 分配给你的内存的？回收内存是如何进行的？<br>Java 内存可以分为堆内存，非堆内存；<br>堆是运行时数据区域，所有类实例和数组的内存均从此处分配。堆是在 Java 虚拟机启动时创建的。对象的堆内存由称为垃圾回收器的自动内存管理系统回收；<br>堆的大小可以固定，也可以扩大和缩小。堆的内存不需要是连续空间。<br>非堆内存：Java 虚拟机管理堆之外的内存；</p>
+<h4 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h4><p>运行时数据区域分为程序计数器、Java虚拟机栈、本地方法栈、Java堆、方法区；<br>其中程序计数器、Java虚拟机栈、本地方法栈属于线程私有，而Java堆和方法区属于线程共享区域。<br>对于Java的堆内存可以划分为新生代和老年代。在新生代中划分为一个Eden区和两个Survivor区。<br>创建一个Java对象时，会通过指针碰撞或空闲列表法为对象分配内存。而当我们访问一个对象的时候可以通过句柄或者直接地址的方式进行对象的访问。</p>
+<ul>
+<li>程序计数器：记录当前线程正在执行的虚拟机字节码的地址 线程私有</li>
+<li>Java虚拟机栈：java方法执行的内存模型, 线程私有<ul>
+<li>创建一个栈帧用于存储局部变量表,操作数栈,动态链接,方法出口等信息 </li>
+<li>从方法调用直至执行完成的过程，对应着一个栈帧在 Java 虚拟机栈中入栈和出栈的过程</li>
+<li>当线程请求的栈深度超过最大值，会抛出 StackOverflowError 异常</li>
+</ul>
+</li>
+<li>本地方法栈: 类似于Java虚拟机栈, 执行的是本地 native 方法</li>
+<li>堆: (几乎所有对象)所有对象都在这里分配内存,是垃圾收集的主要区域<ul>
+<li>线程共享</li>
+<li>现在的垃圾回收算法都是分代收集算法,针对不同的对象,采用不同的垃圾回收算法(新生代/老年代)</li>
+<li>进一步划分区域的目的就是为了更好地,更快地回收内存</li>
+<li>扩容失败会抛出 OutOfMemoryError 异常</li>
+<li>Xms 和 -Xmx 这两个虚拟机参数指定堆内存大小 (初始值,最大值)</li>
+</ul>
+</li>
+<li>方法区:<ul>
+<li>线程共享 PermGen Space</li>
+<li>存放已经被虚拟机加载的类信息,常量,静态变量,编译器编译后的代码等数据</li>
+<li>有人习惯把这里称为永久代, 是因为hotspot 虚拟机把这里也进行了垃圾回收与内存管理</li>
+<li>JDK8, 由于方法区不好调优以及为了简化GC,方法区移至Metaspace，字符串常量移至Java Heap。</li>
+<li>meta space 的特点<ul>
+<li>类及相关的元数据的生命周期与类加载器的一致</li>
+<li>线性分配内存(指针碰撞分配内存),每个加载器有专门的存储空间,所有的类加载器的空间组成了meta space </li>
+<li>如果GC发现某个类加载器不再存活了,会把相关的空间整个回收掉,省掉了GC扫描及压缩的时间</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="如何判断哪些内存需要回收"><a href="#如何判断哪些内存需要回收" class="headerlink" title="如何判断哪些内存需要回收"></a>如何判断哪些内存需要回收</h4><ul>
+<li>引用计数器算法<ul>
+<li>被引用时: count+1, 引用失效是: count-1</li>
+<li>优点: 算法简单高效</li>
+<li>缺点: 循环引用问题难以解决</li>
+</ul>
+</li>
+<li>可达性分析算法<ul>
+<li>通过一系列的GC ROOTS 对象作为起始点, 找到那些不可达GC ROOTS的对象进行回收</li>
+<li>类静态属性引用的对象,常量引用的对象,本地方法栈/java虚拟机栈引用的对象</li>
+</ul>
+</li>
+</ul>
+<p><strong>引用种类</strong>：</p>
+<ul>
+<li>强引用: = 指向的对象, 只要强引用存在, 就不会被回收</li>
+<li>软引用: SoftReference, 发生GC时,如果内存空间足够,则不清理. 描述有用但非必须的对象</li>
+<li>弱引用: WeakReference, 发生GC时,无论内存空间是否足够,都会被清理. 描述非必须对象</li>
+<li>虚引用: PhantomReference, 相当于没有任何引用,随时会被垃圾回收器回收.虚引用主要用来跟踪对象被垃圾回收器回收的活动</li>
+</ul>
+<h4 id="如何回收：垃圾回收算法"><a href="#如何回收：垃圾回收算法" class="headerlink" title="如何回收：垃圾回收算法"></a>如何回收：垃圾回收算法</h4><ul>
+<li>标记-清除算法: 标记需要回收的对象, 回收标记的对象.缺点:1.标记清除的效率都比较低 2.产生大量内存碎片,分配大对象时会再次触发垃圾回收</li>
+<li>复制算法: 将内存分为两块A-B. 当A使用完了,就把A中存活的对象复制到B,把A清空. 缺点:内存缩小为了原来一半.</li>
+<li>标记-整理算法: 复制算法在存货对象较多时,复制代价比较大,因此标记那些存活对象向一端移动,然后清理掉边界以外的内存</li>
+<li>分代回收算法<ul>
+<li>新生代: hotspot Eden:Survivor1:Survivor2 = 8:1:1, 采用复制算法,将Eden和Survivor中的存活对象复制到另一个Survivor中, 在经历过几次复制后,对象可以升级到老年代中</li>
+<li>老年代: 对象存活时间较长, 采用标记-整理或标记-清除算法</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Minor GC 指新生代GC,发生在新生代的垃圾收集动作<br>Major GC/Full GC 指老年代GC,出现了Major GC，经常会伴随至少一次的Minor GC</p>
+</blockquote>
+<h4 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h4><ul>
+<li>新生代收集器<ul>
+<li>Serial收集器:<ul>
+<li>单线程收集器 </li>
+<li>进行垃圾收集时, 停止其他的线程</li>
+<li>复制算法</li>
+</ul>
+</li>
+<li>ParNew收集器: <ul>
+<li>Serial的多线程版本,常与CMS老年代搭配使用</li>
+</ul>
+</li>
+<li>Parallel Scavenge收集器:<ul>
+<li>并行的多线程收集器</li>
+<li>吞吐量优先收集器</li>
+<li>复制算法</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>老年代收集器<ul>
+<li>Serial Old 收集器: Serial 的老年代版本,采用标记-整理算法</li>
+<li>Parallel Old 收集器:Parallel Scavenge 的老年代版本，采用标记-整理算法</li>
+<li>CMS (Concurrent Mark Swap): GC线程与工作线程同时work，以标记-清除算法实现<ul>
+<li>初始标记: 标记 GCRoots 可以直接关联到的对象</li>
+<li>并发标记: 进行 GC Roots Tracing的过程，在整个过程中耗时最长</li>
+<li>重新标记: 修正并发标记中，因为工作线程还在运行的标记错误</li>
+<li>并发清除: 清除对象, 会产生内存碎片</li>
+<li>缺点: 内存碎片, cpu 敏感</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>G1 (Garbage First)<ul>
+<li>标记清理阶段: 与 CMS 相同</li>
+<li>不需要配合独立管理整个java 堆</li>
+<li>空间整合: 分为多个region, 大体上采用标记-整理,局部上采用复制算法 </li>
+<li>可以预测的停顿</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>只有 CMS 与 G1 是并发收集, 其他都是并行收集<br>并行: 指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态<br>并发: 指用户线程与垃圾收集线程同时执行</p>
+</blockquote>
+<h4 id="新对象的内存分配"><a href="#新对象的内存分配" class="headerlink" title="新对象的内存分配"></a>新对象的内存分配</h4><ul>
+<li>大多数情况下,对象直接在新生代Eden区分配,当Eden区没有足够空间分配时,发生一次MinorGC</li>
+<li>大对象直接进入老年代</li>
+<li>对象没经历一次MinorGC都会增加年龄,默认大于15岁时,对象进入老年代</li>
+<li>年龄15岁可以动态判断:当survivor空间相同年龄的对象大小占用了survivor空间的一般,则大于改年龄的,即可进入老年代</li>
+</ul>
+<h4 id="完整-GC-流程图"><a href="#完整-GC-流程图" class="headerlink" title="完整 GC 流程图"></a>完整 GC 流程图</h4><p><img src="https://user-images.githubusercontent.com/23112609/84366167-0bbd7100-ac05-11ea-8715-25251ffb2f24.png" style="zoom:70%" ></img></p>
+<p>语言描述：<br>新对象申请分配空间：</p>
+<ol>
+<li>Eden 区域放不下，进行 YGC，Survivor区域放不下 ，晋升老年代</li>
+<li>老年代放不下，进行 Full GC，还是放不下，申请空间到最大，还是放不下直接报OOM</li>
+</ol>
+<p>新生代：老年代 = 1：2<br>Eden：S0：S1 = 8：1：1</p>
+<h4 id="什么情况下会进行Full-GC？"><a href="#什么情况下会进行Full-GC？" class="headerlink" title="什么情况下会进行Full GC？"></a>什么情况下会进行Full GC？</h4><ol>
+<li>System.gc()方法的调用</li>
+<li>老年代空间不足<ul>
+<li>直接分配到老年代不足</li>
+<li>新生代晋升时不足</li>
+<li>确保分配时不足</li>
+</ul>
+</li>
+<li>metaspace 空间不足</li>
+</ol>
+<h3 id="进程状态监控"><a href="#进程状态监控" class="headerlink" title="进程状态监控"></a>进程状态监控</h3><p>怎么才能知道服务的状态、cpu、memory占用，线程繁忙程度呢？可以从两个维度出发：</p>
+<ol>
+<li>java 服务以进程的形式运行在Linux上，可以使用Linux 命令来查看指标；</li>
+<li>java 本身提供的性能监控工具；</li>
+</ol>
+<h4 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h4><ul>
+<li>ps -aux | head -1; ps -aux | grep PID 查看cpu，mem 占用</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">%CPU：cpu 占用</span><br><span class="line">%MEM：mem 占用</span><br><span class="line">VSZ：虚拟内存，单位k</span><br><span class="line">RSS：物理内存，单位k &#x3D; top RES</span><br><span class="line">TTY：终端      </span><br><span class="line">STAT：D-不可中断，R-正在运行，或在队列中的进程，S-处于休眠状态，T-停止或被追踪，Z-僵尸进程，W-进入内存交换，X-死掉的进程</span><br><span class="line">START：启动时间</span><br><span class="line">TIME：cpu运行时间</span><br><span class="line">COMMAND：程序启动命令</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://user-images.githubusercontent.com/23112609/84907810-39fbee80-b0e6-11ea-86c1-f9d78791ae24.png" style="zoom:70%" ></img></p>
+<p>top 查看机器负载，进程内存，cpu占用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">P：按照CPU使用率排序</span><br><span class="line">M：按照Mem使用率排序</span><br><span class="line">T：按照Time使用总时长排序</span><br><span class="line">load average: 0.00, 0.01, 0.05 最近1min，5min，15min 的机器负载</span><br><span class="line">-Hp 查看进程的所有线程并按照CPU占用率排序</span><br></pre></td></tr></table></figure>
+
+<p>lsof、sar、iostat等命令参考<a href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/lsof.html" target="_blank" rel="noopener">Linux命令文档</a><br>jstat -gc PID 查看堆 GC 情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU   YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line">Survivor0，Survivor1使用空间，Eden区使用空间，Old区使用空间，YGC次数、耗时，FGC次数、耗时</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line"></span><br><span class="line">jinfo -flags PID 查看 jvm 配置参数</span><br><span class="line">&lt;img src&#x3D;&quot;https:&#x2F;&#x2F;user-images.githubusercontent.com&#x2F;23112609&#x2F;84912241-d1b00b80-b0eb-11ea-9cc2-28f8148ffeaa.png&quot; style&#x3D;&quot;zoom:70%&quot; &gt;&lt;&#x2F;img&gt;</span><br><span class="line">jmap -heap PID 查看堆内存使用情况</span><br><span class="line">jmap -dump:file&#x3D;PID.dump PID dump 堆内存进行分析</span><br><span class="line">jhat 分析dump文件，可指定端口，指定内存大小</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;text</span><br><span class="line">[root@master ~]# jmap -heap 1475</span><br><span class="line">Attaching to process ID 1475, please wait...</span><br><span class="line">Debugger attached successfully.</span><br><span class="line">Server compiler detected.</span><br><span class="line">JVM version is 25.141-b15</span><br><span class="line"></span><br><span class="line">using thread-local object allocation.</span><br><span class="line">Parallel GC with 4 thread(s)</span><br><span class="line"></span><br><span class="line">Heap Configuration:</span><br><span class="line">   MinHeapFreeRatio         &#x3D; 0</span><br><span class="line">   MaxHeapFreeRatio         &#x3D; 100</span><br><span class="line">   MaxHeapSize              &#x3D; 4093640704 (3904.0MB)</span><br><span class="line">   NewSize                  &#x3D; 84934656 (81.0MB)</span><br><span class="line">   MaxNewSize               &#x3D; 1364197376 (1301.0MB)</span><br><span class="line">   OldSize                  &#x3D; 170917888 (163.0MB)</span><br><span class="line">   NewRatio                 &#x3D; 2</span><br><span class="line">   SurvivorRatio            &#x3D; 8</span><br><span class="line">   MetaspaceSize            &#x3D; 21807104 (20.796875MB)</span><br><span class="line">   CompressedClassSpaceSize &#x3D; 1073741824 (1024.0MB)</span><br><span class="line">   MaxMetaspaceSize         &#x3D; 17592186044415 MB</span><br><span class="line">   G1HeapRegionSize         &#x3D; 0 (0.0MB)</span><br><span class="line"></span><br><span class="line">Heap Usage:</span><br><span class="line">PS Young Generation</span><br><span class="line">Eden Space:</span><br><span class="line">   capacity &#x3D; 171442176 (163.5MB)</span><br><span class="line">   used     &#x3D; 136521928 (130.19745635986328MB)</span><br><span class="line">   free     &#x3D; 34920248 (33.30254364013672MB)</span><br><span class="line">   79.63147177973289% used</span><br><span class="line">From Space:</span><br><span class="line">   capacity &#x3D; 10485760 (10.0MB)</span><br><span class="line">   used     &#x3D; 0 (0.0MB)</span><br><span class="line">   free     &#x3D; 10485760 (10.0MB)</span><br><span class="line">   0.0% used</span><br><span class="line">To Space:</span><br><span class="line">   capacity &#x3D; 10485760 (10.0MB)</span><br><span class="line">   used     &#x3D; 0 (0.0MB)</span><br><span class="line">   free     &#x3D; 10485760 (10.0MB)</span><br><span class="line">   0.0% used</span><br><span class="line">PS Old Generation</span><br><span class="line">   capacity &#x3D; 179306496 (171.0MB)</span><br><span class="line">   used     &#x3D; 22560608 (21.515472412109375MB)</span><br><span class="line">   free     &#x3D; 156745888 (149.48452758789062MB)</span><br><span class="line">   12.582147609420687% used</span><br><span class="line"></span><br><span class="line">18787 interned Strings occupying 2411568 bytes.</span><br></pre></td></tr></table></figure>
+<p>jstack PID 查看 jvm 当前线程堆栈信息</p>
+<h4 id="实战之-java-服务-cpu-占用-100-问题定位"><a href="#实战之-java-服务-cpu-占用-100-问题定位" class="headerlink" title="实战之 java 服务 cpu 占用 100% 问题定位"></a>实战之 java 服务 cpu 占用 100% 问题定位</h4><ol>
+<li>ps -ef | grep “zl-file” 找到当前服务进程pid<img src="https://user-images.githubusercontent.com/23112609/84386710-5ef2ec00-ac24-11ea-915c-fed8fa04bad6.png"  ></li>
+<li>ps -aux | grep “14980”<img src="https://user-images.githubusercontent.com/23112609/84386789-847ff580-ac24-11ea-84f9-edac15ed56f9.png"  ></li>
+<li>top -Hp 14980 查看cpu占用较高的线程<img src="https://user-images.githubusercontent.com/23112609/84386880-b002e000-ac24-11ea-8870-c519f5872f06.png"  ></li>
+<li>printf %x 15009 转化为16进制<img src="https://user-images.githubusercontent.com/23112609/84386962-d4f75300-ac24-11ea-99ee-f59c4a983ff3.png"  ></li>
+<li>jstack pid &gt; jstack.log dump服务当前线程状态<img src="https://user-images.githubusercontent.com/23112609/84387101-0e2fc300-ac25-11ea-85c4-989f36651633.png"  ></li>
+<li>在jstack.log里面查找16进制的id 3aa1，找到线程对应的代码，排查下代码是否出现了问题<img src="https://user-images.githubusercontent.com/23112609/84387233-433c1580-ac25-11ea-9fee-8c6596bb5aee.png"  ></li>
+<li>发现45行代码这里写了三层for循环，时间复杂度O(n^3)，当然会cpu飙升啦<img src="https://user-images.githubusercontent.com/23112609/84388015-759a4280-ac26-11ea-8dff-d566d8296227.png"  >
+
+</li>
+</ol>
+<h4 id="实战之频繁-FullGC-问题定位"><a href="#实战之频繁-FullGC-问题定位" class="headerlink" title="实战之频繁 FullGC 问题定位"></a>实战之频繁 FullGC 问题定位</h4><p>代码中加载用户方 jar 包，并调用方法，加载完成后将 classloader 置为 null，等待被回收；<br>但是随着加载次数的变多，老年代对象越来越大，并伴随着频繁的 full gc，full gc 后并没有回收掉这一部分内存，<br>原因是用户在 jar 中写的代码有RPC请求，client 使用完之后并没有close，而是等待下一个请求来复用这个client，导致 client 一直存活、full gc 没办法回收掉此类内存，最终OOM；<br>解决办法，通过新建 jvm 的方式去加载这个 jar，并进行解析，使加载 jar 的行为与业务代码分离开； </p>
+<p>线上查看方法：jstat -gc 查看gc信息，发现gc 特别频繁，gc总时长也很长；jmap dump堆信息，jhat 查看大对象是哪些，发现全是 client 占用的比较多， 怀疑没有被回收，于是本地复现。<br>本地复现方法：使用 jconsole 监控本地服务，查看内存信息，并执行 gc，发现随着 gc 的次数增加， 对象并没有被回收。</p>
+<h4 id="实战之连接泄露问题定位"><a href="#实战之连接泄露问题定位" class="headerlink" title="实战之连接泄露问题定位"></a>实战之连接泄露问题定位</h4><p>用户反映网站不能访问，请求变慢，上机器查看发现有大量的 close_wait，原因是服务端这边在执行请求的时候，有些数据库请求拿到数据库连接之后，<br>在准备更新数据库时，发现需要等到锁的释放，造成了 sql 执行时间过长，而 nginx 的连接超时时间较短，直接断开与客户端的连接，导致出现大量 close_wait；<br>解决办法： 检测哪里的 sql 执行的较慢，分析获取锁慢的原因，然后减少此类情况的发生；</p>
+<h3 id="jvm-生产常用参数配置"><a href="#jvm-生产常用参数配置" class="headerlink" title="jvm 生产常用参数配置"></a>jvm 生产常用参数配置</h3><p><a href="https://www.cnblogs.com/redcreen/archive/2011/05/04/2037057.html" target="_blank" rel="noopener">JVM参数列表</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">-Xmx20g &#x2F;&#x2F;JVM最大允许分配的堆内存，按需分配</span><br><span class="line">-Xms20g &#x2F;&#x2F;JVM初始分配的堆内存，一般和Xmx配置成一样以避免每次gc后JVM重新分配内存。</span><br><span class="line"> </span><br><span class="line">-XX:+DisableExplicitGC &#x2F;&#x2F;忽略手动调用GC, System.gc()的调用就会变成一个空调用，完全不触发GC</span><br><span class="line">-XX:+UseConcMarkSweepGC &#x2F;&#x2F;并发标记清除（CMS）收集器</span><br><span class="line">-XX:+CMSParallelRemarkEnabled &#x2F;&#x2F;降低标记停顿</span><br><span class="line">-XX:LargePageSizeInBytes&#x3D;128m &#x2F;&#x2F;内存页的大小</span><br><span class="line"></span><br><span class="line">-XX:+UseCMSInitiatingOccupancyOnly &#x2F;&#x2F;使用手动定义初始化定义开始CMS收集</span><br><span class="line">-XX:CMSInitiatingOccupancyFraction&#x3D;70 &#x2F;&#x2F;使用cms作为垃圾回收使用70％后开始CMS收集</span><br><span class="line"></span><br><span class="line">-XX:+HeapDumpOnOutOfMemoryError  &#x2F;&#x2F;堆溢出时Dump出当前内存堆转储快照以便事后分析</span><br><span class="line">-XX:HeapDumpPath&#x3D;&#x2F;xxx&#x2F;xxx.dump &#x2F;&#x2F; 堆快照存储地址</span><br><span class="line"></span><br><span class="line">-XX:+PrintGCDetails &#x2F;&#x2F;GC详细信息</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JVM/" rel="tag"># JVM</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/06/17/2017-06-17-%E5%B8%B8%E7%94%A8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" rel="prev" title="常用排序算法">
+      <i class="fa fa-chevron-left"></i> 常用排序算法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/10/10/2017-10-10-%E4%B8%80%E6%96%87%E6%90%9E%E6%87%82%E7%BC%93%E5%AD%98/" rel="next" title="一文搞懂缓存">
+      一文搞懂缓存 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM（Java-Virtual-Machine）"><span class="nav-number">1.</span> <span class="nav-text">JVM（Java Virtual Machine）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#编译为-class-文件"><span class="nav-number">1.1.</span> <span class="nav-text">编译为 class 文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#加载class文件"><span class="nav-number">1.2.</span> <span class="nav-text">加载class文件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#类加载器"><span class="nav-number">1.2.1.</span> <span class="nav-text">类加载器</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行class文件"><span class="nav-number">1.3.</span> <span class="nav-text">执行class文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存分配与垃圾回收"><span class="nav-number">2.</span> <span class="nav-text">内存分配与垃圾回收</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#运行时数据区域"><span class="nav-number">2.1.</span> <span class="nav-text">运行时数据区域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何判断哪些内存需要回收"><span class="nav-number">2.2.</span> <span class="nav-text">如何判断哪些内存需要回收</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何回收：垃圾回收算法"><span class="nav-number">2.3.</span> <span class="nav-text">如何回收：垃圾回收算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">2.4.</span> <span class="nav-text">垃圾收集器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#新对象的内存分配"><span class="nav-number">2.5.</span> <span class="nav-text">新对象的内存分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完整-GC-流程图"><span class="nav-number">2.6.</span> <span class="nav-text">完整 GC 流程图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#什么情况下会进行Full-GC？"><span class="nav-number">2.7.</span> <span class="nav-text">什么情况下会进行Full GC？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程状态监控"><span class="nav-number">3.</span> <span class="nav-text">进程状态监控</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本命令"><span class="nav-number">3.1.</span> <span class="nav-text">基本命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实战之-java-服务-cpu-占用-100-问题定位"><span class="nav-number">3.2.</span> <span class="nav-text">实战之 java 服务 cpu 占用 100% 问题定位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实战之频繁-FullGC-问题定位"><span class="nav-number">3.3.</span> <span class="nav-text">实战之频繁 FullGC 问题定位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实战之连接泄露问题定位"><span class="nav-number">3.4.</span> <span class="nav-text">实战之连接泄露问题定位</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jvm-生产常用参数配置"><span class="nav-number">4.</span> <span class="nav-text">jvm 生产常用参数配置</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhule"
+      src="/images/1.jpg">
+  <p class="site-author-name" itemprop="name">Zhule</p>
+  <div class="site-description" itemprop="description">Java|Python|Flink|数据库 <br> 知其然，知其所以然。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhule0601" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhule0601" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode-cn.com/u/zhule0601/" title="LeetCode → https:&#x2F;&#x2F;leetcode-cn.com&#x2F;u&#x2F;zhule0601&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-chrome"></i>LeetCode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhule</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">71k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:05</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

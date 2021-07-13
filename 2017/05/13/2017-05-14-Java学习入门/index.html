@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="基本数据类型四类八种  byte char 8,16 short int long 16,32,64 double float 32,64 boolean  double,float 为什么不能精确计算?12  hashCode equals toStringhashCode() 返回哈希值，而 equals() 是用来判断两个对象是否等价。等价的两个对象散列值一定相同，但是散列值相同的两个对象不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java学习入门">
+<meta property="og:url" content="http://yoursite.com/2017/05/13/2017-05-14-Java%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="ZL&#39;BLOG">
+<meta property="og:description" content="基本数据类型四类八种  byte char 8,16 short int long 16,32,64 double float 32,64 boolean  double,float 为什么不能精确计算?12  hashCode equals toStringhashCode() 返回哈希值，而 equals() 是用来判断两个对象是否等价。等价的两个对象散列值一定相同，但是散列值相同的两个对象不">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-13T23:21:32.000Z">
+<meta property="article:modified_time" content="2021-07-13T02:28:31.387Z">
+<meta property="article:author" content="Zhule">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2017/05/13/2017-05-14-Java%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Java学习入门 | ZL'BLOG</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R1HQLXN188"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-R1HQLXN188');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ZL'BLOG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">23</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/13/2017-05-14-Java%E5%AD%A6%E4%B9%A0%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="Zhule">
+      <meta itemprop="description" content="Java|Python|Flink|数据库 <br> 知其然，知其所以然。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZL'BLOG">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java学习入门
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-05-14 07:21:32" itemprop="dateCreated datePublished" datetime="2017-05-14T07:21:32+08:00">2017-05-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>9.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h3><p>四类八种</p>
+<ul>
+<li>byte char 8,16</li>
+<li>short int long 16,32,64</li>
+<li>double float 32,64</li>
+<li>boolean</li>
+</ul>
+<h3 id="double-float-为什么不能精确计算"><a href="#double-float-为什么不能精确计算" class="headerlink" title="double,float 为什么不能精确计算?"></a>double,float 为什么不能精确计算?</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="hashCode-equals-toString"><a href="#hashCode-equals-toString" class="headerlink" title="hashCode equals toString"></a>hashCode equals toString</h3><p>hashCode() 返回哈希值，而 equals() 是用来判断两个对象是否等价。等价的两个对象散列值一定相同，但是散列值相同的两个对象不一定等价，这是因为计算哈希值具有随机性，两个值不同的对象可能计算出相同的哈希值。</p>
+<p>在覆盖 equals() 方法时应当总是覆盖 hashCode() 方法，保证等价的两个对象哈希值也相等。</p>
+<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><h4 id="List"><a href="#List" class="headerlink" title="List"></a>List</h4><p>ArrayList</p>
+<ul>
+<li>底层数组实现,访问指定元素快, 添加/删除指定元素慢</li>
+<li>初始化容量为10,每次扩容1.5倍</li>
+<li>线程不安全</li>
+</ul>
+<p>LinkedList</p>
+<ul>
+<li>底层双向链表实现</li>
+<li>线程不安全</li>
+<li>还可以用作栈/队列/双向队列</li>
+</ul>
+<a id="more"></a>
+
+<p>Vector</p>
+<ul>
+<li>线程安全的ArrayList</li>
+<li>初始化容量10,每次扩容2倍</li>
+</ul>
+<p>CopyOnWriteArrayList</p>
+<ul>
+<li>写时复制,读写分离,适合多读少写</li>
+<li>内存占用</li>
+<li>线程安全</li>
+<li>增加一个元素,容量加1</li>
+</ul>
+<blockquote>
+<p>写时复制思想?</p>
+</blockquote>
+<p>答: 写时复制就是读操作不变,读取原数据,写操作都会在锁的保护下复制一份数据，在复制的数据上做修改，修改完后，再把元数据的引用指向修改后的数据。<br>类似有: 系统快照,</p>
+<blockquote>
+<p>将数组由N -&gt; 2N的时间复杂度: 每次数组扩容的分摊运行时间为O(1)。</p>
+</blockquote>
+<h4 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h4><p>HashMap</p>
+<ul>
+<li>数组+链表+红黑树</li>
+<li>默认大小16,每次扩容2倍,扩容条件,达到负载因子(0.75)的负载量</li>
+<li>链表长度为8时,转化为红黑树</li>
+<li>将key都散列到一个桶中(允许null值,放在table[0])</li>
+<li>使用的高低位都参与运算的方法使得散列尽量均匀(hashcode右移16位后与右移前进行异或==前16位于后16位进行异或)</li>
+<li>扩容时数组大小始终是2^n 因为h &amp; (length-1) 相当于 h % length 计算下标时速度更快</li>
+<li>当元素超过(负载因子 x 桶大小)时,会resize (jdk7 的resize 过程中可能会死锁,在一个数组上形成环形链表)(多线程情况有错很正常,本来就不是线程安全的)</li>
+<li>扩容时,不需要重新计算h % length, 因为 h % 2^(N+1) = h二进制多取一位,0的话索引不变,1的话索引变为原索引+oldLength</li>
+</ul>
+<blockquote>
+<p>put 一个值的过程?<br>扩容过程?</p>
+</blockquote>
+<p>ConcurrentHashMap jdk7</p>
+<ul>
+<li>线程安全的HashMap,数组加链表</li>
+<li>分段锁 segment 继承于 ReentrantLock,拿不到锁则等待</li>
+<li>value,链表长度等关键数据用 volatile 修饰,因此 get 能获取到最新的值</li>
+<li>put 时对 segment 加锁</li>
+</ul>
+<p>ConcurrentHashMap jdk8</p>
+<ul>
+<li>线程安全的HashMap,数组加链表加红黑树</li>
+<li>put时利用CAS(Compare and swap)尝试写入,失败则自旋保证成功,都不满足利用synchronized加锁写入数据</li>
+<li>value,链表长度等关键数据用 volatile 修饰,因此 get 能获取到最新的值</li>
+</ul>
+<blockquote>
+<p>为什么要利用分段锁?</p>
+</blockquote>
+<p>答: 效率较高,因为每次都是在不同的段之间进行读取写入操作,分开加锁的话会提高性能,并且是线程安全的</p>
+<p>二叉搜索树 BinarySearchTree</p>
+<ul>
+<li>左子树小于等于当前节点</li>
+<li>右子树大于等于当前节点</li>
+<li>任意的左右子树也是bst</li>
+</ul>
+<p>红黑树 RedBlackTree</p>
+<ul>
+<li>节点非黑既红</li>
+<li>根节点是黑色</li>
+<li>叶子节点都是黑色</li>
+<li>红节点的子节点都是黑色</li>
+<li>手撕红黑树代码 v-v</li>
+</ul>
+<h4 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h4><p>不重复的集合, 每次add元素时都会比较元素是否已经存在</p>
+<p>TreeSet</p>
+<ul>
+<li>基于红黑树实现</li>
+<li>支持有序性操作</li>
+<li>调用Comparable接口或者Comparator来判断顺序和全局唯一</li>
+</ul>
+<p>HashSet</p>
+<ul>
+<li>基于hash表实现</li>
+<li>不支持有序性,支持快速查找</li>
+<li>调用hashcode()判断全局唯一性</li>
+</ul>
+<p>LinkedHashSet</p>
+<ul>
+<li>基于HashSet实现</li>
+<li>内部使用双向链表维护元素插入顺序</li>
+</ul>
+<h4 id="Queue-Stack-Tree"><a href="#Queue-Stack-Tree" class="headerlink" title="Queue,Stack,Tree"></a>Queue,Stack,Tree</h4><p>Queue</p>
+<ul>
+<li>LinkedList 双向队列</li>
+<li>PriorityQueue 优先级队列</li>
+</ul>
+<p>Stack</p>
+<ul>
+<li>stack </li>
+</ul>
+<p>Tree</p>
+<ul>
+<li>java中需要自己实现</li>
+</ul>
+<h3 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h3><p>线程的状态转换</p>
+<ul>
+<li>新建 -&gt; 就绪 -&gt; 运行 -&gt; 阻塞 -&gt; 等待 -&gt; 死亡</li>
+</ul>
+<p>如何新启动一个线程</p>
+<ul>
+<li>implement runnable, implement callable, extend Thread</li>
+</ul>
+<p>线程池 ThreadPoolExecutor</p>
+<ul>
+<li>使用线程池来统一管理线程,增加线程使用率,减少线程创建时间</li>
+<li>构造线程池参数: 核心线程数量,最大线程数量,多余线程存活时间,任务队列,拒绝策略(拒绝抛错,父线程执行,丢弃,丢弃最开始的任务)</li>
+<li>提交一个任务到线程池:提交任务 -&gt; 核心线程池是否已满 -&gt; 队列是否已满 -&gt; 最大线程池是否已满 -&gt; 拒绝策略</li>
+<li>线程池如何复用线程? 核心线程创建后, 一直while循环获取队列中的任务,超过存活时间后销毁</li>
+<li>线程池大小确定: cpu密集型任务, (N+1) IO密集型任务 2N  N=CPU核心数</li>
+</ul>
+<p>常见线程池 不建议使用, 建议使用原生构造函数自己构造</p>
+<ul>
+<li>FixedThreadPool 可重用固定线程池(不推荐,无界队列)</li>
+<li>CachedThreadPool根据需要创建新线程的线程池(无限核心线程)</li>
+<li>SingleThreadExecutor 只有一个线程的线程池</li>
+<li>ScheduledThreadPoolExecutor(定期执行任务)</li>
+</ul>
+<p>线程中断</p>
+<ul>
+<li>中断机制是一种协作机制，也就是说通过中断并不能直接终止另一个线程，而需要被中断的线程自己处理中断。</li>
+<li>如何中断? thread.interrupt()</li>
+<li>检查中断标志,在线程执行任务时,应该检查中断标志,以应对中断请求</li>
+<li>捕获中断异常,在线程被阻塞时,应该捕获中断异常,以应对阻塞时的中断</li>
+</ul>
+<p>sleep join wait/notify</p>
+<ul>
+<li>sleep 不释放锁.一般用于测试时间过去多久之后的状态</li>
+<li>join  a.join 会等待a线程执行结束后再执行主线程</li>
+<li>wait notify notifyAll 对于某一个object,拿到锁的可以wait,然后唤醒另一个,或者唤醒全部,另一个拿到锁可以执行</li>
+<li>生产者消费者实现, 同上可以实现 当队列了之后,prod 调用wait, 当队列空了之后,custom 调用wait notify 唤醒prod</li>
+</ul>
+<p>volatile</p>
+<ul>
+<li>线程内存会把变量从主内存复制一份到工作内存中,当多线程并发修改同一个变量时, 线程间会丢失修改,造成内存间的不可见</li>
+<li>保证内存间可见性: 每次对volatile修饰的变量进行读写时,每个线程都会直接操作主内存中的变量,从而保证了内存间的可见性</li>
+<li>某些情况下禁止指令重排打到内存建可见性</li>
+<li>仅保证内存间可见性是不能保证线程安全的,例如:都读取到同一个值后,同时更新并写入主内存,就会有部分线程丢失更新</li>
+</ul>
+<p>synchronized</p>
+<ul>
+<li>作用于: 代码块(同步代码块),方法(静态/非静态: 类的当前实例) </li>
+<li>原理: 加锁时,对象头上count+1, 释放锁时 对象头上count-1</li>
+<li>互斥锁(只能有一个对象抢占到锁) 可重入锁(外层抢到锁后,指定内层方法不需要再抢锁).</li>
+<li>锁优化 自旋锁 -&gt; 偏向锁 -&gt; 轻量级锁 -&gt; 重量级锁   (锁粗化(扩大锁的范围),锁消除(减少不必要的锁))</li>
+<li>自旋锁: 进入等待队列之前,自旋很短的时间获取锁</li>
+<li>偏向锁: 解决无竞争下的锁性能问题,长时间没有其他线程来抢锁, 这个锁就会一直给当前对象</li>
+<li>轻量级锁: 在无竞争条件下,第一次获取锁时采用cas 自旋一下,会很快的获取锁 用于 偏向锁(虽然被抢占,但是没有在使用) -&gt; 轻量级锁</li>
+<li>重量级锁: 自旋失败后, 升级重量级锁, 线程阻塞, 进入等地队列, 等待锁的释放</li>
+</ul>
+<p>ReentrantLock</p>
+<ul>
+<li>tryLock unLock tryLock(timeout)</li>
+<li>公平锁, 非公平锁 new ReentrantLock(true)</li>
+</ul>
+<p>JUC/AQS AbstractQueuedSynchronize</p>
+<ul>
+<li>代码层面实现的锁,acquire,acquireQueued,release</li>
+<li>队列同步器: 构建锁或者其他同步组件的基础框架（如ReentrantLock、ReentrantReadWriteLock、Semaphore等)</li>
+<li>拿到锁的执行代码, 没拿到锁的进入队列排队, 队首就是获得锁的对象,队首执行成功后,唤醒下一个对象获取锁</li>
+<li>独占锁(ReentrantLock)</li>
+<li>共享锁(CountDownLatch,ReadWriteLock)</li>
+<li>CountDownLatch: 用来控制一个或多个线程执行完成后进行下一步</li>
+<li>CyclicBarrier: 用来控制多个线程互相等待, 循环屏障</li>
+<li>Semaphore: 信号量,acquire() +1, release() -1,限制并发请求数量</li>
+<li>FutureTask: 可以拿到线程的返回值,通过获取当前线程的状态做操作</li>
+<li>BlockingQueue: 阻塞队列, 到达队列最大值时, put方法会被阻塞</li>
+<li>ForkJoin: 双端队列, 工作窃取, 大任务拆分成并行的小任务</li>
+<li>ThreadLocal: 线程变量副本, 每个线程都有自己的变量副本, 可用于线程执行过程中的参数传递</li>
+</ul>
+<p>Java内存模型 Java Memory Model</p>
+<ul>
+<li>java线程 - 工作内存 - 主内存<br>先行发生原则</li>
+</ul>
+<blockquote>
+<p>threadLocal 垃圾回收问题?<br>ReentrantLock 是怎么实现的?</p>
+</blockquote>
+<h3 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a><a href="https://book.douban.com/subject/24722612/" target="_blank" rel="noopener">虚拟机</a></h3><h4 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h4><ul>
+<li>程序计数器: 记录当前线程正在执行的虚拟机字节码的地址 线程私有</li>
+<li>Java虚拟机栈:java方法执行的内存模型, 线程私有<ul>
+<li>创建一个栈帧用于存储局部变量表,操作数栈,动态链接,方法出口等信息 </li>
+<li>从方法调用直至执行完成的过程，对应着一个栈帧在 Java 虚拟机栈中入栈和出栈的过程</li>
+<li>当线程请求的栈深度超过最大值，会抛出 StackOverflowError 异常</li>
+</ul>
+</li>
+<li>本地方法栈: 类似于Java虚拟机栈, 执行的是本地 native 方法</li>
+<li>堆: (几乎所有对象)所有对象都在这里分配内存,是垃圾收集的主要区域<ul>
+<li>线程共享</li>
+<li>现在的垃圾回收算法都是分代收集算法,针对不同的对象,采用不同的垃圾回收算法(新生代/老年代)</li>
+<li>进一步划分区域的目的就是为了更好地,更快地回收内存</li>
+<li>扩容失败会抛出 OutOfMemoryError 异常</li>
+<li>Xms 和 -Xmx 这两个虚拟机参数指定堆内存大小 (初始值,最大值)</li>
+</ul>
+</li>
+<li>方法区:<ul>
+<li>线程共享 PermGen Space</li>
+<li>存放已经被虚拟机加载的类信息,常量,静态变量,编译器编译后的代码等数据</li>
+<li>有人习惯把这里称为永久代, 是因为hotspot 虚拟机把这里也进行了垃圾回收与内存管理</li>
+<li>JDK8, 由于方法区不好调优以及为了简化GC,方法区移至Metaspace，字符串常量移至Java Heap。</li>
+<li>meta space 的特点<ul>
+<li>类及相关的元数据的生命周期与类加载器的一致</li>
+<li>线性分配内存(指针碰撞分配内存),每个加载器有专门的存储空间,所有的类加载器的空间组成了meta space </li>
+<li>如果GC发现某个类加载器不再存活了,会把相关的空间整个回收掉,省掉了GC扫描及压缩的时间</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>本地内存<ul>
+<li>nio 中文件复制</li>
+<li>jdk8 中的MetaSpace空间        <h4 id="垃圾收集与内存分配"><a href="#垃圾收集与内存分配" class="headerlink" title="垃圾收集与内存分配"></a>垃圾收集与内存分配</h4></li>
+</ul>
+</li>
+<li>哪些内存需要回收<ul>
+<li>引用计数器算法<ul>
+<li>被引用时: count+1, 引用失效是: count-1</li>
+<li>优点: 算法简单高效</li>
+<li>缺点: 循环引用问题难以解决</li>
+</ul>
+</li>
+<li>可达性分析算法<ul>
+<li>通过一系列的GC ROOTS 对象作为起始点, 找到那些不可达GC ROOTS的对象进行回收</li>
+<li>类静态属性引用的对象,常量引用的对象,本地方法栈/java虚拟机栈引用的对象</li>
+</ul>
+</li>
+<li>引用<ul>
+<li>强引用: = 指向的对象, 只要强引用存在, 就不会被回收</li>
+<li>软引用: SoftReference, 发生GC时,如果内存空间足够,则不清理. 描述有用但非必须的对象</li>
+<li>弱引用: WeakReference, 发生GC时,无论内存空间是否足够,都会被清理. 描述非必须对象</li>
+<li>虚引用: PhantomReference, 相当于没有任何引用,随时会被垃圾回收器回收.虚引用主要用来跟踪对象被垃圾回收器回收的活动</li>
+</ul>
+</li>
+<li>回收方法区(PremGen/永久代/MetaSpace)<ul>
+<li>回收(卸载)无用的类<ul>
+<li>怎么判断无用的类: 该类所有实例都被回收,加载该类的classLoader被回收,Class对象没有地方引用</li>
+<li>jdk8 中方法区修改为MetaSpace后如何回收:元空间虚拟机进行元空间内存的分配和回收</li>
+</ul>
+</li>
+<li>回收废弃常量<ul>
+<li>jdk8字符串常量移到java 堆中</li>
+<li>无引用时回收</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>内存分配<ul>
+<li>大多数情况下,对象直接在新生代Eden区分配,当Eden区没有足够空间分配时,发生一次MinorGC</li>
+<li>大对象直接进入老年代</li>
+<li>对象没经历一次MinorGC都会增加年龄,默认大于15岁时,对象进入老年代</li>
+<li>年龄15岁可以动态判断:当survivor空间相同年龄的对象大小占用了survivor空间的一般,则大于改年龄的,即可进入老年代</li>
+</ul>
+</li>
+<li>如何回收<ul>
+<li>基础算法<ul>
+<li>标记-清除算法: 标记需要回收的对象, 回收标记的对象.缺点:1.标记清除的效率都比较低 2.产生大量内存碎片,分配大对象时会再次触发垃圾回收</li>
+<li>复制算法: 将内存分为两块A-B. 当A使用完了,就把A中存活的对象复制到B,把A清空. 缺点:内存缩小为了原来一半.</li>
+<li>标记-整理算法: 复制算法在存货对象较多时,复制代价比较大,因此标记那些存活对象向一端移动,然后清理掉边界以外的内存</li>
+</ul>
+</li>
+<li>分代回收<ul>
+<li>新生代: hotspot Eden:Survivor1:Survivor2 = 8:1:1, 采用复制算法,将Eden和Survivor中的存活对象复制到另一个Survivor中, 在经历过几次复制后,对象可以升级到老年代中</li>
+<li>老年代: 对象存活时间较长, 采用标记-整理或标记-清除算法</li>
+</ul>
+</li>
+<li>MinorGC 和 Full GC<ul>
+<li>Minor GC 指新生代GC,发生在新生代的垃圾收集动作</li>
+<li>Major GC/Full GC 指老年代GC,出现了Major GC，经常会伴随至少一次的Minor GC</li>
+</ul>
+</li>
+<li>垃圾收集器<ul>
+<li>新生代收集器<ul>
+<li>Serial收集器:<ul>
+<li>单线程收集器 </li>
+<li>进行垃圾收集时, 停止其他的线程</li>
+<li>复制算法</li>
+</ul>
+</li>
+<li>ParNew收集器: <ul>
+<li>Serial的多线程版本,常与CMS老年代搭配使用</li>
+</ul>
+</li>
+<li>Parallel Scavenge收集器:<ul>
+<li>并行的多线程收集器</li>
+<li>吞吐量优先收集器</li>
+<li>复制算法</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>老年代收集器<ul>
+<li>Serial Old收集器: Serial的老年代版本,采用标记-整理算法.</li>
+<li>Parallel Old收集器:Parallel Scavenge的老年代版本,采用标记-整理算法.</li>
+<li>CMS (Concurrent Mark Swap): GC线程与工作线程同时work,以标记-清除算法实现<ul>
+<li>初始标记: 标记GCRoots 可以直接关联到的对象</li>
+<li>并发标记: 进行GC Roots Tracing的过程，在整个过程中耗时最长。</li>
+<li>重新标记: 修正并发标记中,因为工作线程还在运行的标记错误</li>
+<li>并发清除: 清除对象, 会产生内存碎片</li>
+<li>缺点: 内存碎片, cpu敏感</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>G1 (Garbage First)<ul>
+<li>标记清理阶段: 与CMS相同</li>
+<li>不需要配合独立管理整个java 堆</li>
+<li>空间整合: 分为多个region, 大体上采用标记-整理,局部上采用复制算法 </li>
+<li>可以预测的停顿</li>
+</ul>
+</li>
+<li>只有CMS与G1是并发收集, 其他都是并行收集</li>
+<li>并行: 指多条垃圾收集线程并行工作，但此时用户线程仍然处于等待状态</li>
+<li>并发: 指用户线程与垃圾收集线程同时执行</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>什么时候进行回收</li>
+</ul>
+<h4 id="虚拟机性能监控与故障处理"><a href="#虚拟机性能监控与故障处理" class="headerlink" title="虚拟机性能监控与故障处理"></a>虚拟机性能监控与故障处理</h4><ul>
+<li>jmap: 查看jvm 当前堆内存信息,生成快照<ul>
+<li>jmap pid</li>
+<li>jmap -dump pid</li>
+<li>jmap -dump:format=b,file=heapdump.phrof pid</li>
+</ul>
+</li>
+<li>jhat: 分析jmap 产生的快照文件<ul>
+<li>默认7000 可以配置使用内存大小</li>
+</ul>
+</li>
+<li>jstack 线程栈信息</li>
+<li>jps :进程状况</li>
+<li>jstat: 统计信息监视<ul>
+<li>jstat -gc/gcutil/gccause pid</li>
+<li>S0, S1, E, O, M, YGC, YGCT, FGC, FGCT, GCT</li>
+</ul>
+</li>
+<li>jinfo: 查看/动态配置jvm 参数<ul>
+<li>jinfo -flag xx pid</li>
+</ul>
+</li>
+<li>arthas:诊断工具,缺点: 不能跟随应用发布到服务器<ul>
+<li>dashboard jvm 概况</li>
+<li>trace 跟踪方法执行,并输出方法节点耗时</li>
+<li>tread 当前jvm 线程概况</li>
+<li>watch 方法调用情况:入参,返回值,异常</li>
+</ul>
+</li>
+</ul>
+<h4 id="虚拟机类与类加载"><a href="#虚拟机类与类加载" class="headerlink" title="虚拟机类与类加载"></a>虚拟机类与类加载</h4><ul>
+<li>类? 字节码? 对象在虚拟机中是什么样子的</li>
+<li>加载<ul>
+<li>没有强行规定类加载的时机</li>
+<li>于是可以进行 jar, url, class字节码等方式在代码中动态加载</li>
+<li>通过一个类的全限定名获取类的二进制流</li>
+<li>将这个二进制流转化为方法区的运行时数据结构</li>
+<li>在内存中生成这个class 的对象,作为方法区这个class 的数据访问入口</li>
+</ul>
+</li>
+<li>验证: 验证class文件字节流是否符合要求</li>
+<li>准备: 为变量分配内存和初始值的阶段</li>
+<li>解析: <ul>
+<li>不一定在准备之后立即解析,符号引用,直接引用.占坑 </li>
+</ul>
+</li>
+<li>初始化 : 执行构造函数</li>
+<li>卸载</li>
+<li>类加载器<ul>
+<li>双亲委派机制:启动类加载器 -&gt; 扩展类加载器 -&gt; 应用程序加载器 -&gt; 自定义类加载器</li>
+<li>首先让父类加载,如果父类加载不成功,让子类自己加载</li>
+<li>对于任意一个类,都需要类加载器和类本身一同确立在jvm中的唯一性</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>java虚拟机中对象的创建过程?</p>
+</blockquote>
+<ol>
+<li>Eden 区域放不下，进行 YGC，Survivor区域放不下 ，晋升老年代</li>
+<li>老年代放不下，进行 Full GC，还是放不下，申请空间到最大，还是放不下直接报OOM</li>
+</ol>
+<blockquote>
+<p>Full GC 的触发条件</p>
+</blockquote>
+<p>对于 Minor GC，其触发条件非常简单，当 Eden 空间满时，就将触发一次 Minor GC。而 Full GC 则相对复杂，有以下条件：</p>
+<ol>
+<li>调用 System.gc()<br>只是建议虚拟机执行 Full GC，但是虚拟机不一定真正去执行。不建议使用这种方式，而是让虚拟机管理内存。</li>
+<li>老年代空间不足<br>老年代空间不足的常见场景为前文所讲的大对象直接进入老年代、长期存活的对象进入老年代等。<br>为了避免以上原因引起的 Full GC，应当尽量不要创建过大的对象以及数组。除此之外，可以通过 -Xmn 虚拟机参数调大新生代的大小，让对象尽量在新生代被回收掉，不进入老年代。还可以通过 -XX:MaxTenuringThreshold 调大对象进入老年代的年龄，让对象在新生代多存活一段时间。</li>
+<li>空间分配担保失败<br>使用复制算法的 Minor GC 需要老年代的内存空间作担保，如果担保失败会执行一次 Full GC。</li>
+<li>JDK 1.7 及以前的永久代空间不足<br>在 JDK 1.7 及以前，HotSpot 虚拟机中的方法区是用永久代实现的，永久代中存放的为一些 Class 的信息、常量、静态变量等数据。<br>当系统中要加载的类、反射的类和调用的方法较多时，永久代可能会被占满，在未配置为采用 CMS GC 的情况下也会执行 Full GC。如果经过 Full GC 仍然回收不了，那么虚拟机会抛出 java.lang.OutOfMemoryError。<br>为避免以上原因引起的 Full GC，可采用的方法为增大永久代空间或转为使用 CMS GC。</li>
+<li>Concurrent Mode Failure<br>执行 CMS GC 的过程中同时有对象要放入老年代，而此时老年代空间不足（可能是 GC 过程中浮动垃圾过多导致暂时性的空间不足），便会报 Concurrent Mode Failure 错误，并触发 Full GC。</li>
+</ol>
+<h3 id="IO"><a href="#IO" class="headerlink" title="IO"></a>IO</h3><h4 id="文件IO"><a href="#文件IO" class="headerlink" title="文件IO"></a>文件IO</h4><ul>
+<li>File FileUtils 常用的创建, 删除, 定时清理, 软连接, 计算大小/MD5, 过滤出符合条件的(过期/命名规则)</li>
+<li>文件上传下载, 文件上传下载进度, 断点续传, 大文件分片, 下载缓存</li>
+<li>大文件读取/写入 RandomAccessFile</li>
+</ul>
+<h4 id="网络IO"><a href="#网络IO" class="headerlink" title="网络IO"></a>网络IO</h4><ul>
+<li>通过HttpClient读取网络IO Stream</li>
+<li>通过Socket的InputStream 和 OutputStream 进行输入输出</li>
+</ul>
+<h4 id="BIO-NIO-AIO"><a href="#BIO-NIO-AIO" class="headerlink" title="BIO NIO AIO"></a>BIO NIO AIO</h4><ul>
+<li><p>这些概念都是关于网络间通信的</p>
+</li>
+<li><p>阻塞IO,  主线程监听socket连接,有连接过来,要么放弃监听,要么去查看socket有没有数据传入<br>非阻塞IO 主线程监听socket连接,有连接过来,新建线程去查看socket 有没有数据接入,主线程继续监听</p>
+</li>
+<li><p>BIO BlockIO: 在进行网络通信时不能做其他事情,只能进行网络数据交换</p>
+</li>
+<li><p>NIO NewIO 针对java 概念:</p>
+<ul>
+<li>新一代的 IO 通信util, </li>
+<li>channel 管道: 能读能写,FileChannel,SocketChannel</li>
+<li>buffer 缓冲区: 数据交换先经过缓冲区,可以切换读写. ByteBuffer,CharBuffer,IntBuffer,LongBuffer</li>
+<li>Selector 选择器: 使用一个线程处理多个事件, 将channel 注册到 selector上, 可以一次性监控多个 channel, 直到有事件到达</li>
+</ul>
+</li>
+<li><p>NIO NonBlockIO 非阻塞io, 针对 linux 底层通信:</p>
+<ul>
+<li>select: 多路复用一个select, 多个fd(file descriptor) 一次性发送到 kernel, kernel遍历 fd , 查看是否有事件到达<ul>
+<li>缺点: 多次复制 fd 到kernel, io 消耗较大</li>
+</ul>
+</li>
+<li>poll 和 select 差不多</li>
+<li>epoll: 三个函数 epoll_create:创建kernel空间,epoll_ctl: 注册事件(指定回调函数到就绪链表),epoll_wait: 指向就绪链表, 等待事件到达</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>nginx 和 redis 网络模型分别是什么?</p>
+</blockquote>
+<h4 id="nginx-网络模型"><a href="#nginx-网络模型" class="headerlink" title="nginx 网络模型"></a>nginx 网络模型</h4><ul>
+<li>多进程模型: 一个master 多个worker.  (单个master进程时,既是master,又是worker)</li>
+<li>master: 接受外界信号,向多worker发送信号,监控worker运行状态,worker异常退出后重启worker</li>
+<li>worker: 处理网络时间,同等竞争来自客户端的请求, 一个请求只可能被一个worker处理(一把共享锁保证只有一个能accept client的连接)</li>
+<li>worker采用epoll的方式处理用户请求</li>
+<li>并发量: 5W-10W (多进程+epoll) 对比Tomcat并发量 400 </li>
+</ul>
+<h4 id="redis-网络模型"><a href="#redis-网络模型" class="headerlink" title="redis 网络模型"></a>redis 网络模型</h4><ul>
+<li>单线程网络通信模型: redis 内部使用文件事件处理器<code>file event handler</code>,这个文件事件处理器是单线程的</li>
+<li>采用IO多路复用机制同时监听多个 socket,将产生事件的socket压入内存队列中，交给<code>file event handler</code>进行顺序处理 </li>
+<li>事件分派器每次从队列中取出一个 socket，根据 socket 的事件类型交给对应的事件处理器进行处理</li>
+<li>处理完成后, 将结果返回给客户端</li>
+<li>纯内存操作,速度较快</li>
+<li>并发量: 5W-10W</li>
+</ul>
+<h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><p>反射的核心是 JVM 在运行时才动态加载类或调用方法/访问属性，它不需要事先（写代码的时候或编译期）知道运行对象是谁。</p>
+<ul>
+<li>在运行时判断任意一个对象所属的类；</li>
+<li>在运行时构造任意一个类的对象；</li>
+<li>在运行时判断任意一个类所具有的成员变量和方法(通过反射甚至可以调用private方法)</li>
+<li>在运行时调用任意一个对象的方法</li>
+<li>反射调用方法时可以忽略权限检查，因此可能会破坏封装性而导致安全问题</li>
+</ul>
+<h3 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h3><p>通过代理对象访问目标对象, 可以在不修改目标对象的前提下,提供额外的功能操作,扩展目标对象的功能</p>
+<ul>
+<li>静态代理<ul>
+<li>需要实现和目标对象一致的接口</li>
+<li>缺点, 写死在代码里的, 不能动态修改</li>
+</ul>
+</li>
+<li>动态代理<ul>
+<li>JDK 代理<ul>
+<li>需要实现和目标一样的接口</li>
+<li>proxy, classloader, interfaces</li>
+</ul>
+</li>
+<li>CGlib 代理<ul>
+<li>运行时在内存中动态生成一个子类对象从而实现对目标对象功能的扩展</li>
+<li>asm 字节码转换生成新的类,继承目标对象,重写方法,所以目标不能为final类</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h3><p>注解其实就是代码中的特殊标记，这些标记可以在编译、类加载、运行时被读取，并执行相对应的处理。<br>常用: 在spring中获取到方法/对象后, 根据注解的值做不同的业务处理</p>
+<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p>异常怎么处理?<br>对于自己处理不了或不想处理的异常, 就抛出去让上一层调用者处理<br>对于web应用,应自定义异常,在方法返回前端之前包裹所有异常</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/02/11/2017-02-11-%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9%E6%95%B4%E7%90%86/" rel="prev" title="小知识点整理">
+      <i class="fa fa-chevron-left"></i> 小知识点整理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/06/17/2017-06-17-%E5%B8%B8%E7%94%A8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" rel="next" title="常用排序算法">
+      常用排序算法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本数据类型"><span class="nav-number">1.</span> <span class="nav-text">基本数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#double-float-为什么不能精确计算"><span class="nav-number">2.</span> <span class="nav-text">double,float 为什么不能精确计算?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hashCode-equals-toString"><span class="nav-number">3.</span> <span class="nav-text">hashCode equals toString</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集合"><span class="nav-number">4.</span> <span class="nav-text">集合</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#List"><span class="nav-number">4.1.</span> <span class="nav-text">List</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Map"><span class="nav-number">4.2.</span> <span class="nav-text">Map</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Set"><span class="nav-number">4.3.</span> <span class="nav-text">Set</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Queue-Stack-Tree"><span class="nav-number">4.4.</span> <span class="nav-text">Queue,Stack,Tree</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多线程"><span class="nav-number">5.</span> <span class="nav-text">多线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机"><span class="nav-number">6.</span> <span class="nav-text">虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#运行时数据区域"><span class="nav-number">6.1.</span> <span class="nav-text">运行时数据区域</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#垃圾收集与内存分配"><span class="nav-number">6.2.</span> <span class="nav-text">垃圾收集与内存分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#虚拟机性能监控与故障处理"><span class="nav-number">6.3.</span> <span class="nav-text">虚拟机性能监控与故障处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#虚拟机类与类加载"><span class="nav-number">6.4.</span> <span class="nav-text">虚拟机类与类加载</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IO"><span class="nav-number">7.</span> <span class="nav-text">IO</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#文件IO"><span class="nav-number">7.1.</span> <span class="nav-text">文件IO</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#网络IO"><span class="nav-number">7.2.</span> <span class="nav-text">网络IO</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BIO-NIO-AIO"><span class="nav-number">7.3.</span> <span class="nav-text">BIO NIO AIO</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nginx-网络模型"><span class="nav-number">7.4.</span> <span class="nav-text">nginx 网络模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redis-网络模型"><span class="nav-number">7.5.</span> <span class="nav-text">redis 网络模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反射"><span class="nav-number">8.</span> <span class="nav-text">反射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代理"><span class="nav-number">9.</span> <span class="nav-text">代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注解"><span class="nav-number">10.</span> <span class="nav-text">注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异常"><span class="nav-number">11.</span> <span class="nav-text">异常</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhule"
+      src="/images/1.jpg">
+  <p class="site-author-name" itemprop="name">Zhule</p>
+  <div class="site-description" itemprop="description">Java|Python|Flink|数据库 <br> 知其然，知其所以然。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhule0601" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhule0601" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode-cn.com/u/zhule0601/" title="LeetCode → https:&#x2F;&#x2F;leetcode-cn.com&#x2F;u&#x2F;zhule0601&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-chrome"></i>LeetCode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhule</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">71k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:05</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

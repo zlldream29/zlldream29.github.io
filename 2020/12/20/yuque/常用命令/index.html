@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"hide","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":"default"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="要学会用 man&#x2F;–help&#x2F;-help&#x2F;–h&#x2F;-h. 命令是记不完的, 学会用帮助文档查看命令使用方式. Git1234567891011# 更新远程分支并删除本地无用分支git remote update origin --prune# 更新 fork 项目git remote -vgit remote add upstream https:&#x2F;&#x2F;github.com&#x2F;$&amp;#123;forkUs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用命令">
+<meta property="og:url" content="http://yoursite.com/2020/12/20/yuque/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/index.html">
+<meta property="og:site_name" content="ZL&#39;BLOG">
+<meta property="og:description" content="要学会用 man&#x2F;–help&#x2F;-help&#x2F;–h&#x2F;-h. 命令是记不完的, 学会用帮助文档查看命令使用方式. Git1234567891011# 更新远程分支并删除本地无用分支git remote update origin --prune# 更新 fork 项目git remote -vgit remote add upstream https:&#x2F;&#x2F;github.com&#x2F;$&amp;#123;forkUs">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-20T22:31:24.000Z">
+<meta property="article:modified_time" content="2021-07-13T02:28:54.524Z">
+<meta property="article:author" content="Zhule">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/12/20/yuque/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>常用命令 | ZL'BLOG</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-R1HQLXN188"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-R1HQLXN188');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ZL'BLOG</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">23</span></a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/20/yuque/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="Zhule">
+      <meta itemprop="description" content="Java|Python|Flink|数据库 <br> 知其然，知其所以然。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ZL'BLOG">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          常用命令
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-21 06:31:24" itemprop="dateCreated datePublished" datetime="2020-12-21T06:31:24+08:00">2020-12-21</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>要学会用 man/–help/-help/–h/-h. 命令是记不完的, 学会用帮助文档查看命令使用方式.</p>
+<h2 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新远程分支并删除本地无用分支</span></span><br><span class="line">git remote update origin --prune</span><br><span class="line"></span><br><span class="line"><span class="comment"># 更新 fork 项目</span></span><br><span class="line">git remote -v</span><br><span class="line">git remote add upstream https://github.com/<span class="variable">$&#123;forkUser&#125;</span>/<span class="variable">$&#123;forkProject&#125;</span>.git</span><br><span class="line">git fetch upstream</span><br><span class="line">git checkout main</span><br><span class="line">git merge upstream/main</span><br><span class="line">git commit</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+
+<h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><h3 id="查看进程信息"><a href="#查看进程信息" class="headerlink" title="查看进程信息"></a>查看进程信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看进程启动时间,运行时长,启动命令</span></span><br><span class="line">ps -eo pid,lstart,etime,cmd | grep <span class="variable">$PID</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看进程 cpu, 内存占用</span></span><br><span class="line">ps -aux | head -1; ps -aux | grep <span class="variable">$PID</span></span><br><span class="line">cat /proc/<span class="variable">$PID</span>/status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看进程环境信息</span></span><br><span class="line">cat /proc/<span class="variable">$PID</span>/environ</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看进程打开的文件</span></span><br><span class="line">lsof -p <span class="variable">$PID</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="查看系统信息"><a href="#查看系统信息" class="headerlink" title="查看系统信息"></a>查看系统信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cpu</span></span><br><span class="line">top</span><br><span class="line"></span><br><span class="line"><span class="comment"># mem</span></span><br><span class="line">free -h</span><br><span class="line"></span><br><span class="line"><span class="comment"># disk</span></span><br><span class="line"><span class="comment"># 查看硬盘大小</span></span><br><span class="line">df -lh</span><br><span class="line"><span class="comment"># 查看当前文件夹下内容大小</span></span><br><span class="line">du -sh *</span><br><span class="line"><span class="comment"># 查看并按照大小排序</span></span><br><span class="line">du -sh * | sort -hr</span><br><span class="line"></span><br><span class="line"><span class="comment"># network</span></span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<h3 id="时间戳转换"><a href="#时间戳转换" class="headerlink" title="时间戳转换"></a>时间戳转换</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># man date</span></span><br><span class="line">date +%Y-%m-%d-%H:%M:%S</span><br><span class="line"></span><br><span class="line"><span class="comment"># mac</span></span><br><span class="line">date +%s</span><br><span class="line">date -r 1436781720</span><br><span class="line"></span><br><span class="line"><span class="comment"># CentOS</span></span><br><span class="line">date +%s</span><br><span class="line">date -d @1436781720</span><br></pre></td></tr></table></figure>
+
+<h3 id="文本处理"><a href="#文本处理" class="headerlink" title="文本处理"></a>文本处理</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 每隔几行对文本进行截取 1,5,9... NR 表示 awk 处理的记录行数</span></span><br><span class="line">awk <span class="string">'&#123; if (NR % 4 == 1) &#123;print NR, " =&gt; ", $0 &#125; &#125;'</span> file_name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将文本按照 空格 分割</span></span><br><span class="line">files=<span class="string">"<span class="variable">$5</span>"</span></span><br><span class="line">files=<span class="variable">$&#123;files// / &#125;</span>    <span class="comment">#这里是将var中的,替换为空格</span></span><br><span class="line"><span class="keyword">for</span> element <span class="keyword">in</span> <span class="variable">$files</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"put -r <span class="variable">$element</span> <span class="variable">$6</span>"</span> &gt;&gt; <span class="variable">$TEMP_SFTP_FILE</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 取字符串中最后一个 / 后面的文本</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"1:3:5"</span> | awk -F <span class="string">":"</span> <span class="string">'&#123;print $NF&#125;'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># vim json format 数据</span></span><br><span class="line">先输入 `:` 进入命令模式</span><br><span class="line">再输入 `%!python3 -m json.tool` 进行格式化</span><br></pre></td></tr></table></figure>
+
+<h2 id="JAVA"><a href="#JAVA" class="headerlink" title="JAVA"></a>JAVA</h2><h3 id="查看-jvm-信息"><a href="#查看-jvm-信息" class="headerlink" title="查看 jvm 信息"></a>查看 jvm 信息</h3><p>此处只是简单的列出命令, 如果想看 jvm 命令具体解析, 移步 <a href="1">xxx</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看堆栈信息</span></span><br><span class="line">jstack <span class="variable">$PID</span></span><br><span class="line"><span class="comment"># 查看 gc 信息</span></span><br><span class="line">jstat -gc <span class="variable">$PID</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="CollectionUtils"><a href="#CollectionUtils" class="headerlink" title="CollectionUtils"></a>CollectionUtils</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// org.apache.commons.collections.CollectionUtils</span></span><br><span class="line"><span class="comment">// 集合判空</span></span><br><span class="line">CollectionUtils.isEmpty(a);</span><br><span class="line">CollectionUtils.isNotEmpty(a);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 并集</span></span><br><span class="line">CollectionUtils.union(a, b);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 交集 a</span></span><br><span class="line">CollectionUtils.intersection(a, b);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 差集 a - b</span></span><br><span class="line">CollectionUtils.subtract(a, b);</span><br><span class="line"></span><br><span class="line"><span class="comment">// a 是否为 b 的子集</span></span><br><span class="line">CollectionUtils.isSubCollection(a, b);</span><br></pre></td></tr></table></figure>
+
+<h3 id="stream-amp-lambda"><a href="#stream-amp-lambda" class="headerlink" title="stream &amp; lambda"></a>stream &amp; lambda</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// List&lt;Object&gt; to Map&lt;String, Object&gt;</span></span><br><span class="line">List&lt;User&gt; userList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">Map&lt;Long, User&gt; userIdCache = userList.stream().collect(Collectors.toMap(User::getId, user -&gt; user));</span><br><span class="line"></span><br><span class="line"><span class="comment">// List&lt;Object&gt; -&gt; List&lt;String&gt;</span></span><br><span class="line">List&lt;User&gt; userList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">List&lt;Long&gt; userIds = userList.stream().map(User::getId).collect(Collectors.toList());</span><br><span class="line"></span><br><span class="line"><span class="comment">// List&lt;Map&lt;String,String&gt;&gt; -&gt; List&lt;String&gt;</span></span><br><span class="line">List&lt;Map&lt;String, String&gt;&gt; mapList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">List&lt;String&gt; mapKeyList = mapList.stream().map(map -&gt; map.get(<span class="string">"key"</span>)).collect(Collectors.toList());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 筛选符合条件的对象</span></span><br><span class="line">Collection&lt;User&gt; usableUserList = CollectionUtils.select(userList, user -&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"usable"</span>.equals(((User) user).getState());</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 条件判断</span></span><br><span class="line"><span class="keyword">import</span> org.apache.commons.lang3.Validate;</span><br><span class="line"><span class="keyword">import</span> com.google.common.base.Preconditions;</span><br><span class="line"></span><br><span class="line">String userName = <span class="string">""</span>;</span><br><span class="line">Preconditions.checkNotNull(userName, <span class="string">"userName can not be bull!"</span>);</span><br><span class="line">Preconditions.checkArgument(StringUtils.isNotBlank(userName), <span class="string">"userName can not be empty!"</span>);</span><br><span class="line">Validate.notEmpty(userName);</span><br><span class="line">Validate.isTrue(<span class="string">""</span>.equals(userName));</span><br></pre></td></tr></table></figure>
+
+<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 快速读取文件</span></span><br><span class="line">FileUtils.readFileToString(<span class="keyword">new</span> File(filePath), StandardCharsets.UTF_8);</span><br><span class="line"><span class="comment">// 字节数快速转换为可读</span></span><br><span class="line">FileUtils.byteCountToDisplaySize(<span class="number">1024</span> * <span class="number">1024</span>);</span><br><span class="line"><span class="comment">// 递归删除文件夹</span></span><br><span class="line"><span class="comment">// 过滤符合条件的文件</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h2><h3 id="json"><a href="#json" class="headerlink" title="json"></a>json</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    json_str = <span class="string">'&#123;"name":"test","age":10,"isAdmin":true&#125;'</span></span><br><span class="line">    json_obj = json.loads(json_str)</span><br><span class="line">    <span class="keyword">print</span> json_str</span><br><span class="line">    <span class="keyword">print</span> json_obj</span><br><span class="line">    <span class="keyword">print</span> json_obj[<span class="string">'age'</span>]</span><br><span class="line"></span><br><span class="line">    json_str_2 = json.dumps(json_obj)</span><br><span class="line">    <span class="keyword">print</span> json_str_2</span><br></pre></td></tr></table></figure>
+
+<h3 id="request"><a href="#request" class="headerlink" title="request"></a>request</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    url = <span class="string">'http://www.google.com'</span></span><br><span class="line">    response = requests.get(url)</span><br><span class="line">    <span class="keyword">print</span> response.status_code</span><br></pre></td></tr></table></figure>
+
+<h2 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 连接 mysql</span></span><br><span class="line">mysql -h 127.0.0.1 -u <span class="variable">$&#123;user&#125;</span> -p <span class="variable">$&#123;password&#125;</span> -P <span class="variable">$&#123;port&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 mysql 版本</span></span><br><span class="line">select version();</span><br></pre></td></tr></table></figure>
+
+<h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 制作镜像</span></span><br><span class="line">docker build -t <span class="variable">$&#123;imageName&#125;</span>:<span class="variable">$&#123;imageVersion&#125;</span> .</span><br><span class="line"></span><br><span class="line"><span class="comment"># 拉取镜像</span></span><br><span class="line">docker pull <span class="variable">$&#123;imageName&#125;</span>:<span class="variable">$&#123;imageVersion&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动容器</span></span><br><span class="line">docker run -it <span class="variable">$&#123;imageName&#125;</span>:<span class="variable">$&#123;imageVersion&#125;</span> /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 后台启动容器</span></span><br><span class="line">docker run -itd <span class="variable">$&#123;imageName&#125;</span>:<span class="variable">$&#123;imageVersion&#125;</span> /bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it <span class="variable">$&#123;containerId&#125;</span> bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看容器 cpu mem</span></span><br><span class="line">docker stats</span><br><span class="line">docker stats <span class="variable">$&#123;containerId&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="K8S"><a href="#K8S" class="headerlink" title="K8S"></a>K8S</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取 namespace</span></span><br><span class="line">kubectl get ns | grep <span class="variable">$&#123;namespaceID&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取 namespace 的 pod</span></span><br><span class="line">kubectl get pod -n <span class="variable">$&#123;namespaceID&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 pod 的详细信息 (基本信息, 事件, 端口)</span></span><br><span class="line">kubectl describe pod <span class="variable">$&#123;podName&#125;</span> -n <span class="variable">$&#123;namespaceID&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 pod 的日志</span></span><br><span class="line">kubectl logs pod <span class="variable">$&#123;podName&#125;</span> -n <span class="variable">$&#123;namespaceID&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="快速识别大数"><a href="#快速识别大数" class="headerlink" title="快速识别大数"></a>快速识别大数</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">英语里没有<span class="string">"万"</span><span class="string">"亿"</span>，只有<span class="string">"百万（million）"</span><span class="string">"十亿（billion）"</span>，千位分隔符就是这么产生的：</span><br><span class="line"></span><br><span class="line"><span class="number">1</span>,<span class="number">000</span> one thousand 一千</span><br><span class="line"><span class="number">1</span>,<span class="number">000</span>,<span class="number">000</span> one million 一百万</span><br><span class="line"><span class="number">1</span>,<span class="number">000</span>,<span class="number">000</span>,<span class="number">000</span> one billion 十亿</span><br><span class="line"></span><br><span class="line">经常看数字时，如果位数很多的话，往往要一位位的数，才知道具体的金额，</span><br><span class="line">通过千位分隔符一眼就知道金额的具体大小。</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/18/yuque/%E5%9F%BA%E7%9F%B3/" rel="prev" title="基石">
+      <i class="fa fa-chevron-left"></i> 基石
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Git"><span class="nav-number">1.</span> <span class="nav-text">Git</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux"><span class="nav-number">2.</span> <span class="nav-text">Linux</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看进程信息"><span class="nav-number">2.1.</span> <span class="nav-text">查看进程信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看系统信息"><span class="nav-number">2.2.</span> <span class="nav-text">查看系统信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时间戳转换"><span class="nav-number">2.3.</span> <span class="nav-text">时间戳转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文本处理"><span class="nav-number">2.4.</span> <span class="nav-text">文本处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JAVA"><span class="nav-number">3.</span> <span class="nav-text">JAVA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看-jvm-信息"><span class="nav-number">3.1.</span> <span class="nav-text">查看 jvm 信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CollectionUtils"><span class="nav-number">3.2.</span> <span class="nav-text">CollectionUtils</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stream-amp-lambda"><span class="nav-number">3.3.</span> <span class="nav-text">stream &amp; lambda</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#条件判断"><span class="nav-number">3.4.</span> <span class="nav-text">条件判断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件操作"><span class="nav-number">3.5.</span> <span class="nav-text">文件操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python"><span class="nav-number">4.</span> <span class="nav-text">Python</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#json"><span class="nav-number">4.1.</span> <span class="nav-text">json</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#request"><span class="nav-number">4.2.</span> <span class="nav-text">request</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL"><span class="nav-number">5.</span> <span class="nav-text">MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker"><span class="nav-number">6.</span> <span class="nav-text">Docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#K8S"><span class="nav-number">7.</span> <span class="nav-text">K8S</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快速识别大数"><span class="nav-number">8.</span> <span class="nav-text">快速识别大数</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Zhule"
+      src="/images/1.jpg">
+  <p class="site-author-name" itemprop="name">Zhule</p>
+  <div class="site-description" itemprop="description">Java|Python|Flink|数据库 <br> 知其然，知其所以然。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/zhule0601" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;zhule0601" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode-cn.com/u/zhule0601/" title="LeetCode → https:&#x2F;&#x2F;leetcode-cn.com&#x2F;u&#x2F;zhule0601&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-chrome"></i>LeetCode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zhule</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">71k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:05</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
